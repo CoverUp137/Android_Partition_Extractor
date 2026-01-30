@@ -36,11 +36,21 @@ jobs:
 
       - name: Download Firmware
         run: |
-          wget -O firmware.zip "${{ github.event.inputs.firmware_url }}"
+          echo "开始下载固件..."
+          echo "URL: ${{ github.event.inputs.firmware_url }}"
+          
+          # 使用 wget 的静默模式,只显示进度条
+          wget --progress=dot:giga -O firmware.zip "${{ github.event.inputs.firmware_url }}"
+          
+          # 显示下载完成的文件信息
+          echo "下载完成!"
+          ls -lh firmware.zip
 
       - name: Extract payload_properties.txt and payload.bin
         run: |
-          unzip firmware.zip payload_properties.txt payload.bin -d . || unzip firmware.zip payload.bin -d .
+          echo "正在解压 payload 文件..."
+          unzip -q firmware.zip payload_properties.txt payload.bin -d . || unzip -q firmware.zip payload.bin -d .
+          
           if [ -f "payload_properties.txt" ]; then
             echo "--- Payload Properties ---"
             cat payload_properties.txt
@@ -48,17 +58,21 @@ jobs:
             DEVICE_MODEL=$(grep "ro.product.model" payload_properties.txt | cut -d'=' -f2)
             echo "DEVICE_MODEL=$DEVICE_MODEL" >> $GITHUB_ENV
           fi
+          
+          echo "Payload 文件解压完成!"
+          ls -lh payload.bin
 
       - name: Extract Partitions
         run: |
+          echo "开始提取分区: ${{ github.event.inputs.partitions }}"
           mkdir -p output
           ./payload-dumper-go -p "${{ github.event.inputs.partitions }}" -o output payload.bin
 
       - name: Prepare Release Assets
         run: |
           cd output
-          # 将提取的分区重命名，增加前缀以防冲突，并打包成 zip（可选，这里直接上传单个文件）
-          ls -R
+          echo "提取的分区文件:"
+          ls -lh
 
       - name: Create Release and Upload Assets
         uses: softprops/action-gh-release@v2
