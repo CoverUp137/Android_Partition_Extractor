@@ -1,4 +1,4 @@
-# ota-or-img# Firmware Partition Extractor GitHub Action
+# Firmware Partition Extractor GitHub Action
 
 本项目提供了一个 GitHub Action 工作流，用于自动化从 Android 手机固件 ZIP 包中提取指定分区（如 `boot.img`, `vendor_boot.img` 等）文件，并将提取出的文件和固件信息文件 (`payload_properties.txt`) 上传到 GitHub Releases。
 
