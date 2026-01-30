@@ -10,7 +10,7 @@ on:
       partitions:
         description: 'Partitions to extract (comma separated, e.g., boot,init_boot,vendor_boot)'
         required: true
-        default: 'boot,init_boot'
+        default: 'init_boot'
         type: string
       patch_kernelsu:
         description: 'Patch with KernelSU (LKM)'
@@ -18,7 +18,7 @@ on:
         type: boolean
         default: false
       magisk_version:
-        description: 'Magisk Version (e.g., 27.0)'
+        description: 'Magiskboot Version (e.g., 27.0)'
         required: false
         default: '30.6'
         type: string
