@@ -40,7 +40,7 @@ jobs:
           echo "URL: ${{ github.event.inputs.firmware_url }}"
           
           # 使用 wget 的静默模式,只显示进度条
-          wget --progress=dot:giga -d 500 firmware.zip "${{ github.event.inputs.firmware_url }}"
+          wget --progress=dot:giga -d 500 -O firmware.zip "${{ github.event.inputs.firmware_url }}"
           
           # 显示下载完成的文件信息
           echo "下载完成!"
