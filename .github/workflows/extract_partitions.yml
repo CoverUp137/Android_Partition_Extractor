@@ -37,7 +37,6 @@ jobs:
       - name: Download Firmware
         run: |
           echo "开始下载固件..."
-          # 使用 curl 的进度条模式，在 Actions 日志中非常简洁
           curl -L -o firmware.zip "${{ github.event.inputs.firmware_url }}" --progress-bar
           echo "下载完成!"
 
@@ -82,3 +81,11 @@ jobs:
             payload_properties.txt
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          
+      - name: Delete Old Workflow Runs
+        uses: Mattraiano/delete-old-workflow-runs@v2
+        with:
+          token: ${{ secrets.TOKEN }}
+          repository: ${{ github.repository }}
+          retain_days: 5
+          keep_minimum_runs: 0
