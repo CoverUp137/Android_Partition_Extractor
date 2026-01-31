@@ -16,7 +16,7 @@ on:
         description: '是否使用 KernelSU 进行补丁 (LKM 模式)'
         required: true
         type: boolean
-        default: false
+        default: true
       magisk_version:
         description: 'Magisk 版本 (用于提取 magiskboot，例如: 30.6)'
         required: false
