@@ -28,7 +28,7 @@ jobs:
           keep_minimum_runs: 0    
           
       - name: Delete Old Releases
-        uses: easingthemes/delete-old-releases@v0.2.0
+        uses: KengoTODA/actions-delete-release@v1
         with:
          keep_latest: 5           
          older_than: 5            
