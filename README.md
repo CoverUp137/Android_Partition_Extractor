@@ -35,5 +35,3 @@
 - [payload-dumper-go](https://github.com/ssut/payload-dumper-go)
 - [KernelSU](https://github.com/tiann/KernelSU)
 - [Magisk](https://github.com/topjohnwu/Magisk)
-- [delete-workflow-runs](https://github.com/Mattraks/delete-workflow-runs)
-- [delete-older-releases](https://github.com/dev-drprasad/delete-older-releases)
