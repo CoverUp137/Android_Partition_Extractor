@@ -103,23 +103,23 @@ jobs:
             KSU_VER="${{ github.event.inputs.ksu_version }}"
             KMI_VER="${{ github.event.inputs.kmi_version }}"
             
-            # 1. 下载并准备 magiskboot
+            
             echo "正在准备 magiskboot (版本: $MAGISK_VER)..."
             curl -L -o Magisk.zip "https://github.com/topjohnwu/Magisk/releases/download/v${MAGISK_VER}/Magisk-v${MAGISK_VER}.apk"
             unzip -q Magisk.zip "lib/x86_64/libmagiskboot.so" -d .
             mv lib/x86_64/libmagiskboot.so magiskboot
             chmod +x magiskboot
             
-            # 2. 下载 kernelsu.ko (LKM)
+            
             echo "正在下载 kernelsu.ko (KMI: $KMI_VER)..."
             curl -L -o kernelsu.ko "https://github.com/tiann/KernelSU/releases/download/v${KSU_VER}/${KMI_VER}_kernelsu.ko"
             
-            # 3. 下载并准备 ksud
+            
             echo "正在准备 ksud (版本: $KSU_VER)..."
             curl -L -o ksud "https://github.com/tiann/KernelSU/releases/download/v${KSU_VER}/ksud-x86_64-unknown-linux-musl"
             chmod +x ksud
             
-            # 4. 执行补丁命令
+           
             echo "执行补丁命令..."
             ./ksud boot-patch \
               --magiskboot ./magiskboot \
