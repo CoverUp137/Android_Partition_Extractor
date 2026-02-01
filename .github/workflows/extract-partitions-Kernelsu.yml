@@ -1,11 +1,16 @@
 name: Firmware Partition Extraction & KernelSU Patch
 
 on:
- workflow_dispatch:
+  workflow_dispatch:
     inputs:
       firmware_url:
         description: '固件 ZIP 下载地址 (URL)'
         required: true
+        type: string
+      device_model:
+        description: '设备型号和固件版本 (例如: 一加ace5pro-c15-618)，不填默认为 Unknown Device'
+        required: false
+        default: ''
         type: string
       partitions:
         description: '需要提取的分区 (逗号分隔，例如: boot,init_boot,vendor_boot)'
@@ -48,9 +53,6 @@ on:
         type: boolean
         default: false
 
-#  schedule:
-#    - cron: '0 0 * * *'
-
 jobs:
   extract:
     runs-on: ubuntu-latest
@@ -82,10 +84,6 @@ jobs:
       - name: Extract payload_properties.txt and payload.bin
         run: |
           unzip -q firmware.zip payload_properties.txt payload.bin -d . || unzip -q firmware.zip payload.bin -d .
-          if [ -f "payload_properties.txt" ]; then
-            DEVICE_MODEL=$(grep "ota_target_version" payload_properties.txt | cut -d'=' -f2)
-            echo "DEVICE_MODEL=$DEVICE_MODEL" >> $GITHUB_ENV
-          fi
 
       - name: Extract Partitions
         run: |
@@ -103,29 +101,24 @@ jobs:
             KSU_VER="${{ github.event.inputs.ksu_version }}"
             KMI_VER="${{ github.event.inputs.kmi_version }}"
             
-            
             echo "正在准备 magiskboot (版本: $MAGISK_VER)..."
             curl -L -o Magisk.zip "https://github.com/topjohnwu/Magisk/releases/download/v${MAGISK_VER}/Magisk-v${MAGISK_VER}.apk"
             unzip -q Magisk.zip "lib/x86_64/libmagiskboot.so" -d .
             mv lib/x86_64/libmagiskboot.so magiskboot
             chmod +x magiskboot
             
-            
             echo "正在下载 kernelsu.ko (KMI: $KMI_VER)..."
             curl -L -o kernelsu.ko "https://github.com/tiann/KernelSU/releases/download/v${KSU_VER}/${KMI_VER}_kernelsu.ko"
-            
             
             echo "正在准备 ksud (版本: $KSU_VER)..."
             curl -L -o ksud "https://github.com/tiann/KernelSU/releases/download/v${KSU_VER}/ksud-x86_64-unknown-linux-musl"
             chmod +x ksud
             
-           
             echo "执行补丁命令..."
             ./ksud boot-patch \
               --magiskboot ./magiskboot \
               --kmi "${KMI_VER}" \
               -b "$TARGET_IMG"
-
 
             PATCHED_FILE=$(ls kernelsu_*.img 2>/dev/null | head -n 1)
             if [ -n "$PATCHED_FILE" ]; then
@@ -141,36 +134,34 @@ jobs:
             echo "错误: 未在提取的分区中找到 $TARGET_IMG，无法进行补丁。"
             exit 1
           fi
-            
 
       - name: Prepare Assets
         run: |
-          cd output
+          if [ -f "payload_properties.txt" ]; then
+            cp payload_properties.txt output/
+          fi
           echo "最终文件列表:"
-          ls -lh
+          ls -lh output/
 
       - name: Upload to Releases
         if: github.event.inputs.upload_to_release == 'true'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: "extract-${{ github.run_id }}"
-          name: "${{ env.DEVICE_MODEL || 'Unknown Device' }}"
+          name: "${{ github.event.inputs.device_model || 'Unknown Device' }}"
           body: |
-            Partitions: ${{ github.event.inputs.partitions }}
-            KernelSU Patched: ${{ github.event.inputs.patch_kernelsu }}
-            KMI Version: ${{ github.event.inputs.kmi_version }}
+            设备型号及版本: ${{ github.event.inputs.device_model || 'Unknown Device' }}
+            提取的分区: ${{ github.event.inputs.partitions }}
+            KernelSU补丁: ${{ github.event.inputs.patch_kernelsu }}
+            KMI 版本: ${{ github.event.inputs.kmi_version }}
           files: |
             output/*
-            payload_properties.txt
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
-      - name: Upload to Workflow Artifacts
+      - name: Upload to Artifacts
         if: github.event.inputs.upload_to_artifacts == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: "${{ env.DEVICE_MODEL || 'unknown' }}"
-          path: |
-            output/*
-            payload_properties.txt
-          retention-days: 5
+          name: "${{ github.event.inputs.device_model || 'Unknown-Device' }}-${{ github.run_id }}"
+          path: output/*
