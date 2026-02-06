@@ -27,7 +27,7 @@
 
 ## 本地LINUX自动一键Kernel Su打补丁命令
 ```bash
-curl -sSL https://gh.0507.dpdns.org/https://raw.githubusercontent.com/CoverUp137/Android_Partition_Extractor/main/autoksu.sh | bash
+ curl -sSL https://gh.0507.dpdns.org/https://raw.githubusercontent.com/CoverUp137/Android_Partition_Extractor/refs/heads/main/autoksu.sh -o autoksu.sh && chmod +x autoksu.sh && ./autoksu.sh
 ```
 
 
