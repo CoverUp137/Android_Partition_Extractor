@@ -95,7 +95,7 @@ else
     echo -e "${GREEN}${CHECK} 检测到已存在的 ksud，跳过下载。${NC}"
 fi
 
-print_step "3" "选择内核模块 (.ko)"
+print_step "3" "请选择内核版本-（可查看手机设置-内核版本）"
 KMI_OPTIONS=(
     "android16-6.12"
     "android15-6.6"
