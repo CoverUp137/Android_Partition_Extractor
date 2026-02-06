@@ -22,7 +22,14 @@
 ## 📂 文件说明
 
 - `.github/workflows/extract-partitions-Kernelsu.yml`: 核心工作流配置文件。
-- `README.md`: 本说明文档。
+- `autoksu.sh`: linux系统本地一键KernelSu补丁
+`
+
+## 本地LINUX自动一键Kernel Su打补丁命令
+```bash
+curl -sSL https://gh.0507.dpdns.org/https://raw.githubusercontent.com/CoverUp137/Android_Partition_Extractor/main/autoksu.sh | bash
+```
+
 
 ## ⚠️ 注意事项
 
