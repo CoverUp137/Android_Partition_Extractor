@@ -26,7 +26,7 @@ FOLDER="📂"
 print_header() {
     clear
     echo -e "${CYAN}${BOLD}===============================================================${NC}"
-    echo -e "${CYAN}${BOLD}           KernelSU LKM 补丁工具 (本地专业版)          ${NC}"
+    echo -e "${CYAN}${BOLD}           KernelSU LKM 补丁工具 (linux本地版)          ${NC}"
     echo -e "${CYAN}${BOLD}===============================================================${NC}"
     echo -e "${YELLOW}${BOLD} 💡 提示: 请先将 boot.img 或 init_boot.img 放置在当前目录下${NC}"
     echo -e "${BLUE}${INFO} 系统架构: $(uname -m) | 当前时间: $(date '+%Y-%m-%d %H:%M:%S')${NC}"
