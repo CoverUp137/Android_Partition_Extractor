@@ -101,6 +101,7 @@ KMI_OPTIONS=(
     "android15-6.6"
     "android14-6.1"
     "android14-5.15"
+    "android13-5.15"
     "android13-5.10"
     "android12-5.10"
 )
